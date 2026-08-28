@@ -10,9 +10,11 @@ zwei SATA-SSDs. Vorn eine Zusammenfassung mit allen Kennwerten, dahinter die
 ungekürzten Rohausgaben von `smartctl`, damit sich jede Angabe nachprüfen
 lässt.
 
-Auf jedem Datenträger lief vorher ein Selbsttest. **Zwei Auffälligkeiten sind
-offengelegt** und im Bericht erklärt — beide betreffen die Anbindung, nicht das
-Medium; auf allen sechzehn stehen sämtliche Zähler für Medienschäden auf null.
+Auf jedem Datenträger lief ein Selbsttest, auf den vier Festplatten zusätzlich
+ein **erweiterter Test, der die vollständige Oberfläche liest** — alle vier ohne
+einen einzigen Lesefehler. **Zwei Auffälligkeiten sind offengelegt** und im
+Bericht erklärt; beide betreffen die Anbindung, nicht das Medium, und auf allen
+sechzehn Datenträgern stehen sämtliche Zähler für Medienschäden auf null.
 
 Kurzfassung: Die zehn SAS-SSDs haben 143 bis 375 Betriebsstunden bei 0 %
 Abnutzung.
@@ -31,5 +33,5 @@ Betriebssystem.
 
 ---
 
-Stand: 28. August 2026. Erweiterte Selbsttests der vier Festplatten laufen
-noch; die Ergebnisse werden hier nachgetragen.
+Stand: 28. August 2026, vollständig. Die erweiterten Selbsttests der vier
+Festplatten sind abgeschlossen und im Bericht eingetragen.
