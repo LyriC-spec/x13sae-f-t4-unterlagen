@@ -69,3 +69,53 @@ stat -c %y /tmp/t4-fan.heartbeat      # Herzschlag frisch?
 ipmitool raw 0x30 0x45 0x00           # Antwort 01 = Fan Mode Full
 ipmitool sensor thresh CPU_FAN1       # dort muss lcr 140 stehen
 ```
+
+## Wenn die Lüfter dauerhaft laut laufen
+
+Das ist der wahrscheinlichste Fehlerfall, und er hat zwei ganz verschiedene
+Ursachen. Die erste Datei, in die man schaut, ist das Protokoll des Wächters:
+
+```bash
+tail -20 /mnt/scripts/t4-fan-waechter.log
+tail -20 /mnt/scripts/t4-fan.log          # die Regelung selbst
+```
+
+### Ursache 1: der Wächter hat eingegriffen
+
+Er lässt die Lüfter bewusst auf 100 % stehen, statt sie in einem unbekannten
+Zustand zu lassen — im Zweifel laut statt heiß. Was im Protokoll stehen kann:
+
+| Zeile | Bedeutung |
+|---|---|
+| `Regelung laeuft nicht` … `Regelung neu gestartet` | Normalfall, hat sich selbst geheilt. Danach regelt sie wieder. |
+| `Prozess laeuft, Herzschlag aber aelter als 90s - beende ihn` | Die Regelung hing. Sie wurde beendet und neu gestartet. |
+| `Dataset war nicht eingehaengt, nachgeholt` | PostInit-Eintrag 6 hat nicht gegriffen. Nachsehen, ob er noch existiert und aktiv ist. |
+| `FEHLER: /mnt/scripts/t4-fan.py nicht gefunden, auch nach zfs mount nicht` | Das Skript ist weg — etwa nach einer Neuinstallation. Aus diesem Verzeichnis zurückspielen, siehe oben. |
+| `NEUSTART FEHLGESCHLAGEN - Luefter bleiben auf 100 Prozent` | Die Regelung lässt sich nicht starten. Von Hand aufrufen und die Fehlermeldung ansehen: `/mnt/scripts/t4-fan.py` |
+
+Bleibt das Protokoll dagegen stumm und ist der letzte Eintrag alt, war es der
+Wächter **nicht**.
+
+### Ursache 2: der BMC erzwingt Vollast
+
+Dann ist die Regelung machtlos, weil der Fernwartungsbaustein jeden gesetzten
+Stellwert überschreibt. Zwei Prüfungen:
+
+```bash
+ipmitool sensor thresh CPU_FAN1     # muss lcr 140 zeigen
+ipmitool raw 0x30 0x45 0x00         # muss 01 (Full) antworten
+```
+
+Steht bei der unteren Schwelle ein höherer Wert, hält der BMC einen langsam
+drehenden Lüfter für ausgefallen und zwingt **alle** Zonen auf Vollast. Das
+passiert vor allem nach einem Zurücksetzen des Fernwartungsbausteins auf
+Werkseinstellungen: Die entschärften Schwellen liegen in seinem eigenen Speicher,
+nicht in der TrueNAS-Konfiguration. Abhilfe ist PostInit-Eintrag 5, von Hand
+ausgeführt.
+
+### Und wenn alles stimmt
+
+Dann ist es kein Fehler. Unter Dauerlast auf der Grafikkarte geht der
+Radiallüfter auf Vollast, und das ist so gewollt — die Karte liegt dabei rund
+13 Grad unter ihrer Betriebsgrenze. Leise wird das System nicht mehr, solange
+gerechnet wird.
