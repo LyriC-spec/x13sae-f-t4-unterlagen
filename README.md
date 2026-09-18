@@ -35,3 +35,32 @@ Betriebssystem.
 
 Stand: 28. August 2026, vollständig. Die erweiterten Selbsttests der vier
 Festplatten sind abgeschlossen und im Bericht eingetragen.
+
+---
+
+## Berichtigung vom 18. September 2026
+
+In der Lüfterdokumentation ist der Pfad der Lebenszeichendatei mit
+`/run/t4-fan.heartbeat` angegeben — in der Referenzfassung, im Wächter und in den
+Prüfbefehlen in Abschnitt 10. **Auf dem System liegt die Datei unter
+`/tmp/t4-fan.heartbeat`.** Regelung und Wächter verwenden dort übereinstimmend
+diesen Pfad, es ist also nichts fehlerhaft eingerichtet; wer aber Abschnitt 10
+abarbeitet, bekommt `No such file or directory` und hält den Wächter für tot.
+
+Der richtige Prüfbefehl lautet:
+
+```
+stat -c %y /tmp/t4-fan.heartbeat
+```
+
+Das `noexec` auf `/tmp` steht dem nicht entgegen — es verhindert das Ausführen
+von Dateien, nicht das Schreiben.
+
+## Nachprüfung vom 18. September 2026
+
+Das System wurde vor der Übergabe noch einmal unter Last geprüft. Leerlauf
+`Enabled, P8, 405 MHz, 9,6 W, 42 °C`; unter Volllast 69 W, die Regelung zog der
+Kennlinie folgend von 30 auf 100 % nach und fiel danach in Fünferschritten bis
+auf die Untergrenze von 30 % zurück (Blower wieder 3220 U/min). Abweichend von
+den Augustwerten lag die Karte bei Vollast auf 74 bis 75 °C statt 72 °C, bei
+weiterhin zehn Grad Abstand zur Betriebsgrenze von 85 °C.
