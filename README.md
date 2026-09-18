@@ -19,7 +19,7 @@ sechzehn Datenträgern stehen sämtliche Zähler für Medienschäden auf null.
 Kurzfassung: Die zehn SAS-SSDs haben 143 bis 375 Betriebsstunden bei 0 %
 Abnutzung.
 
-## [Kühlung der Tesla T4 (PDF, 20 Seiten)](../../releases/latest/download/T4-Luefterregelung-X13SAE-F.pdf)
+## [Kühlung der Tesla T4 (PDF, 21 Seiten)](../../releases/latest/download/T4-Luefterregelung-X13SAE-F.pdf)
 
 Die Grafikkarte ist eine Serverkarte ohne eigenen Lüfter und wird hier von
 einem Radiallüfter gekühlt, den eine eigene Regelung steuert. Das Dokument
@@ -40,21 +40,15 @@ Festplatten sind abgeschlossen und im Bericht eingetragen.
 
 ## Berichtigung vom 18. September 2026
 
-In der Lüfterdokumentation ist der Pfad der Lebenszeichendatei mit
-`/run/t4-fan.heartbeat` angegeben — in der Referenzfassung, im Wächter und in den
-Prüfbefehlen in Abschnitt 10. **Auf dem System liegt die Datei unter
-`/tmp/t4-fan.heartbeat`.** Regelung und Wächter verwenden dort übereinstimmend
-diesen Pfad, es ist also nichts fehlerhaft eingerichtet; wer aber Abschnitt 10
-abarbeitet, bekommt `No such file or directory` und hält den Wächter für tot.
+Die Lüfterdokumentation nannte die Lebenszeichendatei der Regelung an vier
+Stellen mit `/run/t4-fan.heartbeat` — in der Referenzfassung, im Wächter und im
+Prüfbefehl in Abschnitt 10. **Auf dem System liegt die Datei unter
+`/tmp/t4-fan.heartbeat`.** Eingerichtet war nichts fehlerhaft: Regelung und
+Wächter verwenden dort übereinstimmend denselben Pfad. Wer aber den Prüfbefehl
+abtippte, bekam `No such file or directory` und hielt den Wächter für tot.
 
-Der richtige Prüfbefehl lautet:
-
-```
-stat -c %y /tmp/t4-fan.heartbeat
-```
-
-Das `noexec` auf `/tmp` steht dem nicht entgegen — es verhindert das Ausführen
-von Dateien, nicht das Schreiben.
+**Die PDF ist berichtigt.** Alle vier Fundstellen sind angeglichen, und am Ende
+steht ein Berichtigungsblatt, das die Änderung und die Nachprüfung festhält.
 
 ## Nachprüfung vom 18. September 2026
 
