@@ -31,6 +31,16 @@ und eine lauffähige Referenzfassung der Regelung — geschrieben so, dass sie
 sich unter jedem Linux nachbauen lässt, nicht nur unter dem installierten
 Betriebssystem.
 
+## [Die laufenden Skripte und ihre Startbefehle](scripts/)
+
+Die Regelung `t4-fan.py` und der Wächter `t4-fan-waechter.sh`, wie sie auf dem
+System laufen, dazu die acht PostInit-Einträge im Wortlaut.
+
+Auf dem Gerät liegen die Skripte in einem ZFS-Dataset auf dem boot-pool. **Eine
+Neuinstallation von TrueNAS löscht sie**, und die Startbefehle allein nützen dann
+nichts — der achte startet eine Datei, die es nicht mehr gibt. Deshalb liegen sie
+hier.
+
 ---
 
 Stand: 28. August 2026, vollständig. Die erweiterten Selbsttests der vier
